@@ -17,16 +17,32 @@ class MainActivity : AppCompatActivity() {
         mMemoAdapter = MemoAdapter(this)
         mMemoArrayList = ArrayList<Memo>()
 
-        val title = "1日目"
-        val content = "日本に初めてやってきました。"
-        val name = "マルコ"
-        val memo = Memo(title, content, name)
-        mMemoArrayList.add(memo)
-        mMemoArrayList.add(memo)
+        fun reload(){
+            mMemoAdapter.mMemoList = mMemoArrayList
+            memoListView.adapter = mMemoAdapter
+            mMemoAdapter.notifyDataSetChanged()
+        }
 
-        mMemoAdapter.mMemoList = mMemoArrayList
-        memoListView.adapter = mMemoAdapter
-        mMemoAdapter.notifyDataSetChanged()
+        addButton.setOnClickListener{
+
+            if (titleEdit.text.isNotEmpty()) {
+
+                val title: String = titleEdit.text.toString()
+                val content: String = contentEdit.text.toString()
+                val name: String = nameEdit.text.toString()
+                val memo = Memo(title, content, name)
+
+                mMemoArrayList.add(memo)
+                reload()
+
+                titleEdit.setText("")
+                contentEdit.setText("")
+                nameEdit.setText("")
+                titleEdit.setHint("タイトルを入力")
+
+            }else{
+                titleEdit.setHint("[必須]タイトルを入力してください")
+            }
+        }
     }
-
 }
