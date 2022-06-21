@@ -1,20 +1,24 @@
 package com.example.testapp
 
-import android.R
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import kotlinx.android.synthetic.main.list_memo.view.*
 
-class MemoAdapter(context: Context): BaseAdapter() {
-
-    private val mLayoutInflater: LayoutInflater
-    var mMemoList= arrayListOf<Memo>()
+class MemoAdapter(context: Context) : BaseAdapter() {
+    private var mLayoutInflater: LayoutInflater
+    var mMemoList = ArrayList<Memo>()
 
     init {
-        this.mLayoutInflater = LayoutInflater.from(context)
+        mLayoutInflater =
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    }
+
+    override fun getCount(): Int {
+        return mMemoList.size
     }
 
     override fun getItem(position: Int): Any {
@@ -22,22 +26,27 @@ class MemoAdapter(context: Context): BaseAdapter() {
     }
 
     override fun getItemId(position: Int): Long {
-        return  0
+        return position.toLong()
     }
 
-    override fun getCount(): Int {
-        return mMemoList.size
-    }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View = convertView ?: mLayoutInflater.inflate(R.layout.simple_list_item_2, null)
-        val textView1 = view.findViewById<TextView>(R.id.text1)
-        val textView2 = view.findViewById<TextView>(R.id.text2)
+    override fun getView(position: Int, view: View?, parent: ViewGroup): View {
+        var convertView = view
 
-        // 後でTaskクラスから情報を取得するように変更する
-        textView1.text = mMemoList[position].title
-        textView2.text = mMemoList[position].contents
+        if (convertView == null) {
+            convertView = mLayoutInflater.inflate(R.layout.list_memo, parent, false)
+        }
 
-        return view
+        val titleText = convertView!!.text1 as TextView
+        titleText.text = mMemoList[position].title
+
+        val contentText = convertView.text2 as TextView
+        contentText.text = mMemoList[position].contents
+
+        val nameText = convertView.text3 as TextView
+        nameText.text = mMemoList[position].name
+
+        return convertView
     }
 }
+
